@@ -1,4 +1,4 @@
-C51 COMPILER V9.00   MAIN                                                                  10/29/2022 23:38:17 PAGE 1   
+C51 COMPILER V9.00   MAIN                                                                  10/30/2022 17:05:35 PAGE 1   
 
 
 C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
@@ -8,128 +8,55 @@ COMPILER INVOKED BY: D:\软件\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTE
 line level    source
 
    1          #include <reg51.h>
-   2          #include <intrins.h>    // 使用移位函数需要引入的头文件
+   2          #include <intrins.h>
    3          
    4          #define LED P2
    5          
    6          typedef unsigned char uint8;
    7          typedef unsigned int uint16;
    8          
-   9          void Delay100ms(uint8 x);       // 函数声明
+   9          void Delay100ms(uint8 x);
   10          
-  11          void main()       
-  12          {
-  13   1              uint8 val = 0xFE;        // 移位库函数所需要输入的参数
-  14   1              bit dir = 0;            // 流水灯流动的方向，初始化为左移
-  15   1              uint8 state = 0;        // 状态
-  16   1      
-  17   1              LED = 0xFE;
-  18   1              while (1) {
-  19   2      /*
-  20   2                      // 方案一：位运算
-  21   2                      uint8 i, j;
-  22   2                      while (1) {
-  23   2                              LED = ~LED;
-  24   2                              LED <<= 1;
-  25   2                              if (LED == 0x00) {
-  26   2                                      LED = 0x01;
-  27   2                              }
-  28   2                              LED = ~LED;             
-  29   2                              i = 255;
-  30   2                              j = 255;
-  31   2                              while (j--)                     // 延时
-  32   2                                      while (i--);
-  33   2                      }
-  34   2      */
-  35   2      /*
-  36   2                      // 方案二：库函数，能够实现更复杂的样式
-  37   2                      uint8 i, j;
-  38   2                      while (1) {
-  39   2                              LED = val;
-  40   2                              val = _crol_(val, 1);
-  41   2                              while (j--)                     // 延时
-  42   2                                      while (i--);
-  43   2                      }
-  44   2      */
-  45   2      /*
-  46   2                      // 方案二：库函数，实现多方向流水
-  47   2                      while (1) {
-  48   2                              if (dir == 0) {
-  49   2                                      val = _crol_(val, 1);
-  50   2                                      LED = val;
-  51   2                                      Delay100ms(5);  
-  52   2                              } else if (dir == 1) {
-  53   2                                      val = _cror_(val, 1);
-  54   2                                      LED = val;
-  55   2                                      Delay100ms(5);  
-C51 COMPILER V9.00   MAIN                                                                  10/29/2022 23:38:17 PAGE 2   
-
-  56   2                              }
-  57   2                              if (val == 0xFE || val == 0x7F) {
-  58   2                                      dir = ~dir;
-  59   2                              }
-  60   2                      }
-  61   2      */
-  62   2      ///*
-  63   2                      // 方案三：状态机
-  64   2                      while (1) {
-  65   3                              switch (state) {
-  66   4                                      case 0:
-  67   4                                      case 1:
-  68   4                                      case 2:
-  69   4                                      case 3:
-  70   4                                      case 4:
-  71   4                                      case 5:
-  72   4                                      case 6:
-  73   4                                              LED = val;
-  74   4                                              Delay100ms(5);
-  75   4                                              val = _crol_(val, 1);
-  76   4                                              break;
-  77   4                                      case 7:
-  78   4                                      case 8:
-  79   4                                      case 9:
-  80   4                                      case 10:
-  81   4                                      case 11:
-  82   4                                      case 12:
-  83   4                                      case 13:
-  84   4                                              LED = val;
-  85   4                                              Delay100ms(5);
-  86   4                                              val = _cror_(val, 1);
-  87   4                                              break;
-  88   4                              }
-  89   3                              state = (state + 1) % 14;
-  90   3                      }
-  91   2      //*/
-  92   2              }
-  93   1      }
-  94          
-  95          void Delay100ms(uint8 x)                // 函数定义，@12.000MHz
-  96          {
-  97   1              uint8 i, j;
-  98   1              while (x--) {
-  99   2                      // STC-ISP自动生成的代码
- 100   2                      i = 195;
- 101   2                      j = 138;
- 102   2                      do
- 103   2                      {
- 104   3                              while (--j);
- 105   3                      } while (--i);
- 106   2              }
- 107   1      }
- 108          
- 109          
+  11          uint8 code states[] = {0xDF, 0xDD};
+  12          
+  13          void main()       
+  14          {
+  15   1              uint8 i;
+  16   1              LED = 0x65;
+  17   1              while (1) {
+  18   2                      for (i = 0; i < 2; i++) {
+  19   3                              LED = states[i];
+  20   3                              Delay100ms(20);
+  21   3                      }       
+  22   2              }
+  23   1              while(1);
+  24   1      }
+  25          
+  26          void Delay100ms(uint8 x)                //@12.000MHz
+  27          {
+  28   1              unsigned char i, j;
+  29   1      
+  30   1              while (x) {
+  31   2                      i = 195;
+  32   2                      j = 138;
+  33   2                      do
+  34   2                      {
+  35   3                              while (--j);
+  36   3                      } while (--i);
+  37   2                      x--;
+  38   2              }
+  39   1      
+  40   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    103    ----
-   CONSTANT SIZE    =   ----    ----
+   CODE SIZE        =     45    ----
+   CONSTANT SIZE    =      2    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----       2
-C51 COMPILER V9.00   MAIN                                                                  10/29/2022 23:38:17 PAGE 3   
-
+   DATA SIZE        =   ----       1
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =   ----       1
+   BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
 
 
