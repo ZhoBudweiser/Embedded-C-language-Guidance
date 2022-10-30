@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        10/29/2022  22:07:50  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        10/29/2022  23:38:18  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -11,7 +11,7 @@ MEMORY MODEL: SMALL
 INPUT MODULES INCLUDED:
   main.obj (MAIN)
   D:\Èí¼þ\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
-  D:\Èí¼þ\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+  D:\Èí¼þ\KEIL\C51\LIB\C51S.LIB (?C?UIDIV)
 
 
 LINK MAP OF MODULE:  LED (MAIN)
@@ -22,27 +22,32 @@ LINK MAP OF MODULE:  LED (MAIN)
 
             * * * * * * *   D A T A   M E M O R Y   * * * * * * *
             REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
-            DATA    0008H     0001H     UNIT         ?DT?MAIN
-            IDATA   0009H     0001H     UNIT         ?STACK
+            DATA    0008H     0002H     UNIT         _DATA_GROUP_
+                    000AH     0016H                  *** GAP ***
+            BIT     0020H.0   0000H.1   UNIT         _BIT_GROUP_
+                    0020H.1   0000H.7                *** GAP ***
+            IDATA   0021H     0001H     UNIT         ?STACK
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
-            CODE    0003H     008CH     UNIT         ?C_C51STARTUP
-            CODE    008FH     0011H     UNIT         ?PR?_DELAY100MS?MAIN
-            CODE    00A0H     0005H     UNIT         ?PR?MAIN?MAIN
-            CODE    00A5H     0004H     UNIT         ?C_INITSEG
+            CODE    0003H     0056H     UNIT         ?PR?MAIN?MAIN
+            CODE    0059H     0055H     UNIT         ?C?LIB_CODE
+            CODE    00AEH     0011H     UNIT         ?PR?_DELAY100MS?MAIN
+            CODE    00BFH     000CH     UNIT         ?C_C51STARTUP
 
 
 
 OVERLAY MAP OF MODULE:   LED (MAIN)
 
 
-SEGMENT
-  +--> CALLED SEGMENT
----------------------
-?C_C51STARTUP
+SEGMENT                           BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH     START    LENGTH
+------------------------------------------------------------------
+?C_C51STARTUP                  -----    -----      -----    -----
   +--> ?PR?MAIN?MAIN
-  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN                  0020H.0  0000H.1    0008H    0002H
+  +--> ?PR?_DELAY100MS?MAIN
 
 
 
@@ -54,18 +59,51 @@ SYMBOL TABLE OF MODULE:  LED (MAIN)
   -------         MODULE        MAIN
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:00A0H         PUBLIC        P2
-  D:0008H         PUBLIC        states
-  C:00A0H         PUBLIC        main
-  C:008FH         PUBLIC        _Delay100ms
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/29/2022  23:38:18  PAGE 2
+
+
+  C:0003H         PUBLIC        main
+  C:00AEH         PUBLIC        _Delay100ms
   -------         PROC          MAIN
-  C:00A0H         LINE#         12
-BL51 BANKED LINKER/LOCATER V6.22                                                      10/29/2022  22:07:50  PAGE 2
-
-
-  C:00A0H         LINE#         13
-  C:00A0H         LINE#         14
-  C:00A3H         LINE#         15
-  C:00A3H         LINE#         17
+  -------         DO            
+  D:0008H         SYMBOL        val
+  B:0020H.0       SYMBOL        dir
+  D:0009H         SYMBOL        state
+  -------         ENDDO         
+  C:0003H         LINE#         11
+  C:0003H         LINE#         12
+  C:0003H         LINE#         13
+  C:0006H         LINE#         14
+  C:0008H         LINE#         15
+  C:000BH         LINE#         17
+  C:000EH         LINE#         18
+  C:000EH         LINE#         64
+  C:000EH         LINE#         65
+  C:001AH         LINE#         66
+  C:001AH         LINE#         67
+  C:001AH         LINE#         68
+  C:001AH         LINE#         69
+  C:001AH         LINE#         70
+  C:001AH         LINE#         71
+  C:001AH         LINE#         72
+  C:001AH         LINE#         73
+  C:001DH         LINE#         74
+  C:0022H         LINE#         75
+  C:002FH         LINE#         76
+  C:0031H         LINE#         77
+  C:0031H         LINE#         78
+  C:0031H         LINE#         79
+  C:0031H         LINE#         80
+  C:0031H         LINE#         81
+  C:0031H         LINE#         82
+  C:0031H         LINE#         83
+  C:0031H         LINE#         84
+  C:0034H         LINE#         85
+  C:0039H         LINE#         86
+  C:0046H         LINE#         87
+  C:0046H         LINE#         88
+  C:0046H         LINE#         89
+  C:0057H         LINE#         90
   -------         ENDPROC       MAIN
   -------         PROC          _DELAY100MS
   D:0007H         SYMBOL        x
@@ -73,21 +111,25 @@ SYMBOL TABLE OF MODULE:  LED (MAIN)
   D:0006H         SYMBOL        i
   D:0005H         SYMBOL        j
   -------         ENDDO         
-  C:008FH         LINE#         20
-  C:008FH         LINE#         21
-  C:008FH         LINE#         23
-  C:0095H         LINE#         25
-  C:0097H         LINE#         26
-  C:0099H         LINE#         28
-  C:0099H         LINE#         29
-  C:009BH         LINE#         30
-  C:009DH         LINE#         31
-  C:009FH         LINE#         32
+  C:00AEH         LINE#         95
+  C:00AEH         LINE#         96
+  C:00AEH         LINE#         98
+  C:00B4H         LINE#         100
+  C:00B6H         LINE#         101
+  C:00B8H         LINE#         103
+  C:00B8H         LINE#         104
+  C:00BAH         LINE#         105
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/29/2022  23:38:18  PAGE 3
+
+
+  C:00BCH         LINE#         106
+  C:00BEH         LINE#         107
   -------         ENDPROC       _DELAY100MS
   -------         ENDMOD        MAIN
 
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?_DELAY100MS?MAIN
+  -------         MODULE        ?C?UIDIV
+  C:0059H         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
 
-Program Size: data=10.0 xdata=0 code=169
-LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)
+Program Size: data=11.1 xdata=0 code=203
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
